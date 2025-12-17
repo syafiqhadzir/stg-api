@@ -1,0 +1,11 @@
+
+> frontend@0.0.0 dev
+> vite
+
+
+  VITE v7.3.0  ready in 376 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+4:54:21 PM [vite] (client) hmr update /src/style.css
+4:54:21 PM [vite] (client) hmr update /src/style.css

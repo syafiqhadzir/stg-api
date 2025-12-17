@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+body {
+  font-family: 'Amiri', serif;
+  font-feature-settings: "kern", "liga", "clig";
+}
