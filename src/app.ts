@@ -39,10 +39,7 @@ export function buildApp() {
             },
             servers: [],
         },
-        transform: ({ schema, url }) => {
-            // Compatibility transform if needed
-            return { schema, url };
-        }
+
     });
 
     app.register(swaggerUi, {
