@@ -1,8 +1,11 @@
+import path from 'path';
+import fs from 'fs';
 import Fastify, { FastifyError, FastifyRequest, FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
 import compression from '@fastify/compress';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
+import fastifyStatic from '@fastify/static';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import {
@@ -23,7 +26,18 @@ export function buildApp() {
   app.setSerializerCompiler(serializerCompiler);
 
   // Security Plugins
-  app.register(helmet);
+  app.register(helmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        fontSrc: ["'self'", 'data:', 'https:'],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'validator.swagger.io'],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+  });
+
   app.register(rateLimit, {
     max: 100,
     timeWindow: '1 minute',
@@ -33,18 +47,40 @@ export function buildApp() {
   app.register(cors);
   app.register(compression);
 
+  // Static Files - Serve Fonts
+  const rootDir = process.cwd();
+  app.register(fastifyStatic, {
+    root: path.join(rootDir, 'fonts'),
+    prefix: '/fonts/',
+  });
+
   // Documentation Plugins
   app.register(swagger, {
     openapi: {
+      openapi: '3.0.3',
       info: {
         title: 'Quranic Recitations API',
-        description:
-          "A RESTful API for comparing Quranic text variants across different Qira'at (recitation traditions). Access verse texts from Hafs, Warsh, Qalun, and other authentic recitations.",
+        description: `
+A comprehensive RESTful API for accessing and comparing Quranic text variants across different Qiraat (recitation traditions).
+
+## Features
+- **Compare Variants**: View the same verse in different recitations side-by-side
+- **Browse Surahs**: List all 114 surahs with metadata
+- **Navigation**: Browse by Juz (1-30) or Mushaf page number
+- **Search**: Full-text Arabic search using trigram matching
+- **Multiple Qiraat**: Access Hafs, Warsh, Qalun, Douri, Shuba, Sousi
+
+## Quick Start
+\`\`\`bash
+curl "http://localhost:3000/api/v1/compare?surah=1&ayah=1"
+\`\`\`
+        `.trim(),
         version: '1.0.0',
+        termsOfService: 'https://github.com/syafiqhadzir/stg-api/blob/main/LICENSE',
         contact: {
           name: 'API Support',
-          url: 'https://github.com/syafiqhadzir/stg-api',
-          email: 'support@example.com',
+          url: 'https://github.com/syafiqhadzir/stg-api/issues',
+          email: 'syafiq@example.com',
         },
         license: {
           name: 'MIT',
@@ -56,23 +92,62 @@ export function buildApp() {
           url: 'http://localhost:3000',
           description: 'Development Server',
         },
+        {
+          url: 'https://api.example.com',
+          description: 'Production Server',
+        },
       ],
       tags: [
         {
           name: 'Comparison',
-          description: 'Endpoints for comparing Quranic verse variants across recitations',
+          description: 'Compare Quranic verse variants across recitations',
+        },
+        {
+          name: 'Surahs',
+          description: 'Browse and retrieve surah data with verses',
+        },
+        {
+          name: 'Qiraat',
+          description: 'Available recitation traditions (Qiraat)',
+        },
+        {
+          name: 'Navigation',
+          description: 'Browse verses by Juz or Mushaf page',
+        },
+        {
+          name: 'Search',
+          description: 'Full-text Arabic search with trigram matching',
         },
       ],
       externalDocs: {
-        description: 'GitHub Repository',
-        url: 'https://github.com/syafiqhadzir/stg-api',
+        description: 'Full API Documentation',
+        url: 'https://github.com/syafiqhadzir/stg-api/blob/main/docs/API.md',
       },
     },
     transform: jsonSchemaTransform,
   });
 
+  // Read custom CSS
+  const cssPath = path.join(rootDir, 'public', 'css', 'swagger.css');
+  let customCss = '';
+  try {
+    if (fs.existsSync(cssPath)) {
+      customCss = fs.readFileSync(cssPath, 'utf-8');
+    }
+  } catch (err) {
+    console.error('Failed to read swagger.css', err);
+  }
+
   app.register(swaggerUi, {
     routePrefix: '/docs',
+    theme: {
+      css: [
+        {
+          filename: 'swagger.css',
+          content: customCss,
+        },
+      ],
+    },
   });
 
   // Routes

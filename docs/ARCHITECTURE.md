@@ -2,8 +2,8 @@
 
 ## 1. Domain Overview
 
-The core domain problem is **Textual Alignment** of 10+ canonical Quranic Recitations (Qira'at). 
-- **Challenge**: Different Qira'at have different verse counts and numbering schemes (e.g., verse 10 in Hafs might be verse 9 in Warsh).
+The core domain problem is **Textual Alignment** of 10+ canonical Quranic Recitations (Qiraat). 
+- **Challenge**: Different Qiraat have different verse counts and numbering schemes (e.g., verse 10 in Hafs might be verse 9 in Warsh).
 - **Solution**: We establish **Hafs 'an 'Asim** as the Canonical Skeleton. All other variants are mapped to the Hafs `(surah, ayah)` dimension.
 
 ## 2. Data Model

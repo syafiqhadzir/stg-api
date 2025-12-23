@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![Fastify](https://img.shields.io/badge/Fastify-5.x-orange.svg)](https://fastify.io/)
 
-A high-performance, containerized REST API for comparing Quranic text variants across the ten canonical recitations (Qira'at). Built with **Fastify**, **PostgreSQL**, and **Clean Architecture**.
+A high-performance, containerized REST API for comparing Quranic text variants across the ten canonical recitations (Qiraat). Built with **Fastify**, **PostgreSQL**, and **Clean Architecture**.
 
 ## 📋 Table of Contents
 
@@ -128,36 +128,32 @@ cp .env.example .env
 
 Visit **[http://localhost:3000/docs](http://localhost:3000/docs)** for the Swagger UI.
 
-### `GET /api/v1/compare`
+### Endpoints
 
-Fetch all recitation variants for a specific verse.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/compare` | Compare verse variants across Qiraat |
+| GET | `/surahs` | List all 114 surahs |
+| GET | `/surahs/:surah` | Get a surah with all verses |
+| GET | `/qiraat` | List available Qiraat |
+| GET | `/juz/:juz` | Get verses by Juz (1-30) |
+| GET | `/page/:page` | Get verses by page |
+| GET | `/search` | Search Quranic text |
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `surah` | number | ✅ | Surah number (1-114) |
-| `ayah` | number | ✅ | Ayah number (≥1) |
+> See [docs/API.md](docs/API.md) for complete API documentation.
 
-**Example Response:**
+### Quick Example
 
-```json
-{
-  "surah": 1,
-  "ayah": 1,
-  "variants": {
-    "hafs": { "text": "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ", "page": 1, "juz": 1 },
-    "warsh": { "text": "...", "page": 1, "juz": 1 }
-  }
-}
+```bash
+# Compare verse variants
+curl "http://localhost:3000/api/v1/compare?surah=1&ayah=1"
+
+# List all surahs
+curl "http://localhost:3000/api/v1/surahs"
+
+# Get Juz 1
+curl "http://localhost:3000/api/v1/juz/1"
 ```
-
-**Error Responses:**
-
-| Status | Description |
-|--------|-------------|
-| `400` | Invalid query parameters (surah/ayah out of range) |
-| `404` | Verse not found in database |
-| `429` | Rate limit exceeded (100 req/min) |
-| `500` | Internal server error |
 
 ## 🧪 Testing
 

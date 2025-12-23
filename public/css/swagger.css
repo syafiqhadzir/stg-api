@@ -1,0 +1,83 @@
+/* Font Face Definitions */
+@font-face {
+  font-family: 'UthmanicHafs';
+  src: url('/fonts/UthmanicHafs.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'UthmanicWarsh';
+  src: url('/fonts/UthmanicWarsh.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'UthmanicQaloun';
+  src: url('/fonts/UthmanicQaloun.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'UthmanicDouri';
+  src: url('/fonts/UthmanicDouri.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'UthmanicShuba';
+  src: url('/fonts/UthmanicShuba.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'UthmanicSousi';
+  src: url('/fonts/UthmanicSousi.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HafsNastaleeq';
+  src: url('/fonts/HafsNastaleeq.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Swagger UI Styling */
+
+/* General response body text */
+.swagger-ui .response-body pre,
+.swagger-ui .response-col_description__inner div,
+.swagger-ui .model-box {
+  font-family: 'UthmanicHafs', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  font-size: 1.2em;
+  line-height: 1.8;
+}
+
+/* Specific styling for JSON string values containing Arabic */
+/* Note: Swagger UI doesn't have specific classes for JSON values, so global font is best bet */
+.swagger-ui .highlight-code pre {
+  font-family: 'UthmanicHafs', monospace !important;
+}
+
+/* Increase size for Arabic text readability */
+.swagger-ui code {
+  font-size: 16px !important;
+}
+
+/* Right-to-Left support if needed globally, though data often handles it */
+.swagger-ui .response-body {
+  direction: ltr; /* JSON structure is LTR, but Arabic text inside is RTL handled by unicode bidi */
+}

@@ -65,7 +65,7 @@ Canonical list of 6,236 verses based on the Hafs count.
 
 ### `qiraat_metadata` (Dimension)
 
-Metadata for each recitation tradition (Qira'at).
+Metadata for each recitation tradition (Qiraat).
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -211,7 +211,7 @@ docker exec -i stg-api-db-1 psql -U postgres -d quran_db -c "SELECT COUNT(*) FRO
 | Pass | Action | Description |
 |------|--------|-------------|
 | 1 | Load Hafs data | Base layer from `csv/hafsData.csv` |
-| 2 | Load variants | Other Qira'at aligned to Hafs |
+| 2 | Load variants | Other Qiraat aligned to Hafs |
 | 3 | Refresh view | Update `mv_comparison_matrix` |
 
 ### Troubleshooting
