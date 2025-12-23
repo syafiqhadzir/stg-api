@@ -1,6 +1,8 @@
 # Quranic Recitations API
 
 [![CI](https://github.com/syafiqhadzir/stg-api/actions/workflows/ci.yml/badge.svg)](https://github.com/syafiqhadzir/stg-api/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=syafiqhadzir_stg-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=syafiqhadzir_stg-api)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=syafiqhadzir_stg-api&metric=coverage)](https://sonarcloud.io/summary/new_code?id=syafiqhadzir_stg-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-22.x-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
@@ -8,15 +10,47 @@
 
 A high-performance, containerized REST API for comparing Quranic text variants across the ten canonical recitations (Qira'at). Built with **Fastify**, **PostgreSQL**, and **Clean Architecture**.
 
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Architecture](#️-architecture)
+- [Tech Stack](#️-tech-stack)
+- [Quick Start](#-quick-start)
+- [Configuration](#️-configuration)
+- [API Reference](#-api-reference)
+- [Testing](#-testing)
+- [Development](#-development)
+- [Security](#-security)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
+- [Acknowledgments](#-acknowledgments)
+- [License](#-license)
+
 ## ✨ Features
 
 - **Verse Comparison**: Query any verse and retrieve all recitation variants in a single response
 - **OpenAPI Documentation**: Interactive Swagger UI at `/docs`
 - **Type-Safe**: Full TypeScript with Zod validation
 - **Production-Ready**: Distroless Docker image, rate limiting, and security headers
+- **Database Migrations**: Version-controlled schema changes with node-pg-migrate
 - **100% Test Coverage**: Comprehensive unit and integration testing
 
-## 🏗️ Tech Stack
+## �️ Architecture
+
+```mermaid
+graph TD
+    Client[Client] --> API[Fastify API]
+    API --> Helmet[Helmet Security]
+    API --> RateLimit[Rate Limiter]
+    API --> Zod[Zod Validation]
+    API --> Controller[Controllers]
+    Controller --> UseCase[Use Cases]
+    UseCase --> Repo[Repositories]
+    Repo --> DB[(PostgreSQL)]
+    API --> Swagger["/docs - Swagger UI"]
+```
+
+## �🏗️ Tech Stack
 
 | Layer | Technology |
 |-------|------------|
@@ -26,6 +60,7 @@ A high-performance, containerized REST API for comparing Quranic text variants a
 | **Database** | PostgreSQL 16+ |
 | **Validation** | Zod 4.x |
 | **Documentation** | OpenAPI 3.0 / Swagger UI |
+| **Migrations** | node-pg-migrate |
 | **Testing** | Vitest |
 | **Container** | Docker (Distroless) |
 
@@ -46,7 +81,9 @@ docker-compose up --build -d
 curl "http://localhost:3000/api/v1/compare?surah=1&ayah=1"
 
 # View API documentation
-open http://localhost:3000/docs
+# Windows: start http://localhost:3000/docs
+# macOS: open http://localhost:3000/docs
+# Linux: xdg-open http://localhost:3000/docs
 ```
 
 ### Local Development
@@ -55,6 +92,9 @@ open http://localhost:3000/docs
 # Install dependencies
 npm ci
 
+# Copy environment configuration
+cp .env.example .env
+
 # Start database
 docker-compose up db -d
 
@@ -62,6 +102,24 @@ docker-compose up db -d
 npm run build
 npm start
 ```
+
+## ⚙️ Configuration
+
+Create a `.env` file from the example:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `NODE_ENV` | ❌ | `development` | Environment mode (`development`, `production`, `test`) |
+| `PORT` | ❌ | `3000` | Server port |
+| `DB_HOST` | ❌ | `localhost` | PostgreSQL host |
+| `DB_PORT` | ❌ | `5432` | PostgreSQL port |
+| `DB_USER` | ❌ | `postgres` | Database username |
+| `DB_PASS` | ❌ | `postgres` | Database password |
+| `DB_NAME` | ❌ | `quran_db` | Database name |
 
 ## 📚 API Reference
 
@@ -90,6 +148,15 @@ Fetch all recitation variants for a specific verse.
   }
 }
 ```
+
+**Error Responses:**
+
+| Status | Description |
+|--------|-------------|
+| `400` | Invalid query parameters (surah/ayah out of range) |
+| `404` | Verse not found in database |
+| `429` | Rate limit exceeded (100 req/min) |
+| `500` | Internal server error |
 
 ## 🧪 Testing
 
@@ -132,8 +199,62 @@ src/
 | `npm start` | Start production server |
 | `npm test` | Run tests |
 | `npm run test:coverage` | Run tests with coverage |
-| `npm run lint` | Run ESLint |
+| `npm run test:e2e` | Run E2E tests |
+| `npm run lint` | Run ESLint with auto-fix |
 | `npm run format` | Format code with Prettier |
+| `npm run migrate` | Run database migrations |
+| `npm run migrate:create` | Create a new migration file |
+
+## 🔒 Security
+
+This API implements security best practices:
+
+- **Helmet**: Sets secure HTTP headers (CSP, HSTS, X-Frame-Options, etc.)
+- **Rate Limiting**: 100 requests per minute per client IP
+- **Input Validation**: All inputs validated via Zod schemas
+- **Response Serialization**: Responses validated against schemas to prevent data leaks
+
+## ❓ Troubleshooting
+
+<details>
+<summary><strong>Database connection fails</strong></summary>
+
+Ensure PostgreSQL is running and environment variables are correctly set:
+
+```bash
+# Check if database container is running
+docker-compose ps
+
+# Start database only
+docker-compose up db -d
+
+# Check logs
+docker-compose logs db
+```
+</details>
+
+<details>
+<summary><strong>Port 3000 already in use</strong></summary>
+
+Change the port via environment variable:
+
+```bash
+# Linux/macOS
+PORT=3001 npm start
+
+# Windows (PowerShell)
+$env:PORT=3001; npm start
+```
+</details>
+
+<details>
+<summary><strong>Response serialization errors</strong></summary>
+
+This usually means the database returned data in an unexpected format. Check that:
+1. Database migrations have been run: `npm run migrate up`
+2. Data has been ingested properly
+3. Check the application logs for specific field mismatches
+</details>
 
 ## 🤝 Contributing
 
@@ -141,6 +262,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
 - Setting up your development environment
 - Coding standards and conventions
 - Pull request process
+
+## 🙏 Acknowledgments
+
+- Quranic text data sourced from authentic scholarly sources
+- Built with [Fastify](https://fastify.io/) - Fast and low overhead web framework
+- API documentation powered by [Swagger UI](https://swagger.io/tools/swagger-ui/)
 
 ## 📄 License
 
