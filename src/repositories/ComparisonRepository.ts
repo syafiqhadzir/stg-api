@@ -25,8 +25,8 @@ export class ComparisonRepository implements IComparisonRepository {
     const row = result.rows[0];
 
     return {
-      surah: row.surah,
-      ayah: row.ayah,
+      surah: Number(row.surah),
+      ayah: Number(row.ayah),
       variants: row.variants as ComparisonMatrix,
     };
   }
