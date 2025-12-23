@@ -177,17 +177,75 @@ DB_NAME=quran_db
 
 ## Data Ingestion
 
-The Python ETL pipeline (`ingest.py`) handles data loading:
+The Python ETL pipeline loads Quranic text data into the database.
+
+### Prerequisites
 
 ```bash
-# With database running
+# Install Python dependencies
+pip install -r requirements.txt
+```
+
+### Full Setup (First Time)
+
+```bash
+# 1. Start the database container
+docker-compose up db -d
+
+# 2. Initialize the schema (if not using migrations)
+docker exec -i stg-api-db-1 psql -U postgres -d quran_db < init.sql
+
+# 3. Run the ingestion pipeline
+python ingest.py
+
+# 4. Verify data was loaded
+docker exec -i stg-api-db-1 psql -U postgres -d quran_db -c "SELECT COUNT(*) FROM quran_verses;"
+```
+
+### Pipeline Steps
+
+| Pass | Action | Description |
+|------|--------|-------------|
+| 1 | Load Hafs data | Base layer from `csv/hafsData.csv` |
+| 2 | Load variants | Other Qira'at aligned to Hafs |
+| 3 | Refresh view | Update `mv_comparison_matrix` |
+
+### Troubleshooting
+
+<details>
+<summary><strong>API returns 404 for all verses</strong></summary>
+
+This means the database is empty. Run the full setup:
+
+```bash
+docker exec -i stg-api-db-1 psql -U postgres -d quran_db < init.sql
 python ingest.py
 ```
 
-**Pipeline Steps:**
-1. **Pass 1**: Load Hafs data (base layer)
-2. **Pass 2**: Load variant Qira'at (aligned to Hafs)
-3. **Pass 3**: Refresh materialized view
+Verify data exists:
+```bash
+docker exec -i stg-api-db-1 psql -U postgres -d quran_db -c "SELECT COUNT(*) FROM mv_comparison_matrix;"
+```
+</details>
+
+<details>
+<summary><strong>Materialized view is empty</strong></summary>
+
+Refresh the materialized view:
+```bash
+docker exec -i stg-api-db-1 psql -U postgres -d quran_db -c "REFRESH MATERIALIZED VIEW mv_comparison_matrix;"
+```
+</details>
+
+<details>
+<summary><strong>Connection refused to database</strong></summary>
+
+Ensure Docker is running and the database container is up:
+```bash
+docker-compose up db -d
+docker-compose ps
+```
+</details>
 
 ---
 
