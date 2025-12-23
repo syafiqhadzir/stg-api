@@ -29,5 +29,5 @@ export interface ComparisonResponse {
 export interface ErrorResponse {
     error: string;
     statusCode: number;
-    details?: any;
+    details?: unknown;
 }

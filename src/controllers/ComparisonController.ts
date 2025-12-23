@@ -29,9 +29,10 @@ export class ComparisonController {
             // 3. Return Response
             reply.send(result);
 
-        } catch (error: any) {
-            if (error.message.includes('Verse not found')) {
-                reply.status(404).send({ error: error.message });
+        } catch (error: unknown) {
+            const err = error as Error;
+            if (err.message.includes('Verse not found')) {
+                reply.status(404).send({ error: err.message });
             } else {
                 throw error; // Pass to global handler
             }

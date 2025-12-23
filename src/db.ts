@@ -12,16 +12,16 @@ const pool = new Pool({
 });
 
 // Event listener for unexpected errors on idle clients
-pool.on('error', (err, client) => {
+// Event listener for unexpected errors on idle clients
+pool.on('error', (err, _client) => {
   console.error('Unexpected error on idle client', err);
   process.exit(-1);
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const query = async (text: string, params?: any[]) => {
-  const start = Date.now();
   const res = await pool.query(text, params);
-  const duration = Date.now() - start;
-  // console.log('executed query', { text, duration, rows: res.rowCount });
+  // console.log('executed query', { text, rows: res.rowCount });
   return res;
 };
 
