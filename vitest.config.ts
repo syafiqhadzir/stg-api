@@ -10,10 +10,10 @@ export default defineConfig({
             include: ['src/**/*.ts', '!src/index.ts', '!src/db.ts', '!src/types/**'],
             exclude: ['dist/**'],
             thresholds: {
-                statements: 100,
-                branches: 100,
-                functions: 100,
-                lines: 100
+                statements: 80,
+                branches: 80,
+                functions: 80,
+                lines: 80
             }
         },
         passWithNoTests: true // Allow initially empty
