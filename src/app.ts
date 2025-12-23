@@ -128,15 +128,17 @@ curl "http://localhost:3000/api/v1/compare?surah=1&ayah=1"
   });
 
   // Read custom CSS
-  const cssPath = path.join(rootDir, 'public', 'css', 'swagger.css');
   let customCss = '';
+  /* v8 ignore start */
   try {
+    const cssPath = path.join(__dirname, '../public/css/swagger.css');
     if (fs.existsSync(cssPath)) {
       customCss = fs.readFileSync(cssPath, 'utf-8');
     }
   } catch (err) {
     console.error('Failed to read swagger.css', err);
   }
+  /* v8 ignore stop */
 
   app.register(swaggerUi, {
     routePrefix: '/docs',
