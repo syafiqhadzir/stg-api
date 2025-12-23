@@ -8,26 +8,29 @@ export const ComparisonQuerySchema = z.object({
 
 export type ComparisonQuery = z.infer<typeof ComparisonQuerySchema>;
 
-// Domain Entities
-export interface VariantText {
-  text: string;
-  page: number;
-  juz: number;
-}
+// API Response Schemas (for Swagger documentation)
+export const VariantTextSchema = z.object({
+  text: z.string().describe('The variant text of the verse'),
+  page: z.number().describe('Page number in the Mushaf'),
+  juz: z.number().describe('Juz (part) number'),
+});
 
-export interface ComparisonMatrix {
-  [variantSlug: string]: VariantText;
-}
+export const ComparisonResponseSchema = z.object({
+  surah: z.number().describe('Surah number (1-114)'),
+  ayah: z.number().describe('Ayah (verse) number'),
+  variants: z.record(z.string(), VariantTextSchema).describe('Map of variant slug to text data'),
+});
 
-// API Response Interface
-export interface ComparisonResponse {
-  surah: number;
-  ayah: number;
-  variants: ComparisonMatrix;
-}
+export const ErrorResponseSchema = z.object({
+  statusCode: z.number().describe('HTTP status code'),
+  error: z.string().describe('Error type/name'),
+  message: z.string().describe('Human-readable error message'),
+});
 
-export interface ErrorResponse {
-  error: string;
-  statusCode: number;
-  details?: unknown;
-}
+// TypeScript Types (inferred from schemas)
+export type VariantText = z.infer<typeof VariantTextSchema>;
+export type ComparisonResponse = z.infer<typeof ComparisonResponseSchema>;
+export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
+
+// Legacy interfaces for compatibility
+export type ComparisonMatrix = Record<string, VariantText>;

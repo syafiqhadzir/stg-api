@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { z } from 'zod';
 
 // We need to mock process.env before import.
 // Using vi.hoisted or clearing modules.
@@ -21,8 +20,8 @@ describe('Config', () => {
 
     it('should exit on invalid environment variables', async () => {
         process.env.PORT = 'invalid';
-        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => { throw new Error('process.exit'); }) as any);
-        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation((() => { throw new Error('process.exit'); }) as unknown as never);
+        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => { /* intentionally empty */ });
 
         await expect(import('../../src/config')).rejects.toThrow('process.exit');
 

@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { GetComparisonUseCase } from '../usecases/GetComparisonUseCase';
-import { ComparisonQuerySchema, ComparisonQuery } from '../types';
+import { ComparisonQuery } from '../types';
 
 export class ComparisonController {
-  constructor(private getComparisonUseCase: GetComparisonUseCase) {}
+  constructor(private getComparisonUseCase: GetComparisonUseCase) { }
 
   async getComparison(
     req: FastifyRequest<{ Querystring: ComparisonQuery }>,
@@ -21,7 +21,7 @@ export class ComparisonController {
     } catch (error: unknown) {
       const err = error as Error;
       if (err.message.includes('Verse not found')) {
-        reply.status(404).send({ error: err.message });
+        reply.status(404).send({ statusCode: 404, error: 'Not Found', message: err.message });
       } else {
         throw error; // Pass to global handler
       }

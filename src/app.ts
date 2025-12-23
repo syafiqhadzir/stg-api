@@ -5,9 +5,8 @@ import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
-import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
+import { serializerCompiler, validatorCompiler, ZodTypeProvider, jsonSchemaTransform } from 'fastify-type-provider-zod';
 import apiRoutes from './routes';
-import { ZodError } from 'zod';
 
 export function buildApp() {
   const app = Fastify({
@@ -34,11 +33,37 @@ export function buildApp() {
     openapi: {
       info: {
         title: 'Quranic Recitations API',
-        description: "API for comparing Quranic text variants across different Qira'at.",
+        description:
+          "A RESTful API for comparing Quranic text variants across different Qira'at (recitation traditions). Access verse texts from Hafs, Warsh, Qalun, and other authentic recitations.",
         version: '1.0.0',
+        contact: {
+          name: 'API Support',
+          url: 'https://github.com/syafiqhadzir/stg-api',
+          email: 'support@example.com',
+        },
+        license: {
+          name: 'MIT',
+          url: 'https://opensource.org/licenses/MIT',
+        },
       },
-      servers: [],
+      servers: [
+        {
+          url: 'http://localhost:3000',
+          description: 'Development Server',
+        },
+      ],
+      tags: [
+        {
+          name: 'Comparison',
+          description: 'Endpoints for comparing Quranic verse variants across recitations',
+        },
+      ],
+      externalDocs: {
+        description: 'GitHub Repository',
+        url: 'https://github.com/syafiqhadzir/stg-api',
+      },
     },
+    transform: jsonSchemaTransform,
   });
 
   app.register(swaggerUi, {
@@ -55,7 +80,7 @@ export function buildApp() {
     // Fastify handles validation errors with statusCode 400 automatically via schema
     // or we can customize it here if needed, but the default fallback generic handler works.
 
-    const status = error.statusCode || 500;
+    const status = error.statusCode ?? 500;
     reply.status(status).send({
       statusCode: status,
       error: error.name,
