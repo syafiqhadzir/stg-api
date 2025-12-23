@@ -9,5 +9,4 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["frontend"]
 }
