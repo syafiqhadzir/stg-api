@@ -22,6 +22,7 @@ A high-performance, containerized REST API for comparing Quranic text variants a
 - [Development](#-development)
 - [Security](#-security)
 - [Troubleshooting](#-troubleshooting)
+- [Documentation](#-documentation)
 - [Contributing](#-contributing)
 - [Acknowledgments](#-acknowledgments)
 - [License](#-license)
@@ -189,6 +190,9 @@ src/
 ├── usecases/              # Business logic
 ├── repositories/          # Data access layer
 └── types/                 # TypeScript types & Zod schemas
+
+dist/src/                  # Compiled JavaScript output
+└── ...                    # Mirrors src/ structure
 ```
 
 ### Available Scripts
@@ -255,6 +259,18 @@ This usually means the database returned data in an unexpected format. Check tha
 2. Data has been ingested properly
 3. Check the application logs for specific field mismatches
 </details>
+
+## 📖 Documentation
+
+For detailed documentation, see the [docs/](docs/) directory:
+
+| Guide | Description |
+|-------|-------------|
+| [Architecture](docs/ARCHITECTURE.md) | System design and data model |
+| [API Reference](docs/API.md) | Complete endpoint documentation |
+| [Database](docs/DATABASE.md) | Schema, migrations, and queries |
+| [Testing](docs/TESTING.md) | Test strategy and coverage |
+| [Security](docs/SECURITY.md) | Security measures and config |
 
 ## 🤝 Contributing
 

@@ -42,6 +42,14 @@ This project follows strict Clean Architecture principles:
 
 **Do not import Repositories directly into Controllers.** Always go through a UseCase.
 
+## 📚 Additional Documentation
+
+For in-depth guides, see the [docs/](docs/) directory:
+
+- [Testing Guide](docs/TESTING.md) - Test patterns and coverage requirements
+- [Security Guide](docs/SECURITY.md) - Security measures and configuration
+- [Database Guide](docs/DATABASE.md) - Schema and migration details
+
 ## 🧪 Quality Gates
 
 Before submitting a PR, ensure all checks pass:

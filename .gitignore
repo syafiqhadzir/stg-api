@@ -51,6 +51,7 @@ coverage/
 test-results/
 *.lcov
 lint_output.json
+lint_output.txt
 lint_full_output.txt
 coverage_log.txt
 
