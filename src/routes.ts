@@ -31,6 +31,7 @@ export default function apiRoutes(fastify: FastifyInstance) {
       },
     },
     async (req, reply) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return comparisonController.getComparison(req as any, reply);
     },
   );

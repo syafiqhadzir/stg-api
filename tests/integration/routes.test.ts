@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import { buildApp } from '../../src/app';
 import { ComparisonRepository } from '../../src/repositories/ComparisonRepository';
 

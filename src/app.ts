@@ -5,7 +5,12 @@ import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
-import { serializerCompiler, validatorCompiler, ZodTypeProvider, jsonSchemaTransform } from 'fastify-type-provider-zod';
+import {
+  serializerCompiler,
+  validatorCompiler,
+  ZodTypeProvider,
+  jsonSchemaTransform,
+} from 'fastify-type-provider-zod';
 import apiRoutes from './routes';
 
 export function buildApp() {

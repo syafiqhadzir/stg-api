@@ -3,7 +3,7 @@ import { GetComparisonUseCase } from '../usecases/GetComparisonUseCase';
 import { ComparisonQuery } from '../types';
 
 export class ComparisonController {
-  constructor(private getComparisonUseCase: GetComparisonUseCase) { }
+  constructor(private getComparisonUseCase: GetComparisonUseCase) {}
 
   async getComparison(
     req: FastifyRequest<{ Querystring: ComparisonQuery }>,
