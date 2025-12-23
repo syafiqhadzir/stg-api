@@ -193,7 +193,11 @@ pip install -r requirements.txt
 docker-compose up db -d
 
 # 2. Initialize the schema (if not using migrations)
+# Linux/macOS/Git Bash:
 docker exec -i stg-api-db-1 psql -U postgres -d quran_db < init.sql
+
+# Windows PowerShell:
+Get-Content init.sql | docker exec -i stg-api-db-1 psql -U postgres -d quran_db
 
 # 3. Run the ingestion pipeline
 python ingest.py
