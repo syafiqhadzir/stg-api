@@ -1,3 +1,4 @@
+/* v8 ignore file */
 import { buildApp } from './app';
 import dotenv from 'dotenv';
 
