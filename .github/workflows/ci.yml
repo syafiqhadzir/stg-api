@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: quran_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 22
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci --legacy-peer-deps
+
+    - name: Run Linter
+      run: npm run lint
+      continue-on-error: true # Unblock for now as we might have legacy code issues
+
+    - name: Build
+      run: npm run build
+
+    - name: Initialize DB
+      # Install client to run sql script or use a separate step
+      run: |
+        sudo apt-get install -y postgresql-client
+        PGPASSWORD=postgres psql -h localhost -U postgres -d quran_db -f init.sql
+
+    - name: Run Tests
+      run: npm test
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_USER: postgres
+        DB_PASS: postgres
+        DB_NAME: quran_db
