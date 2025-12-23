@@ -26,3 +26,17 @@ export const query = async (text: string, params?: any[]) => {
 };
 
 export const getClient = () => pool.connect();
+
+export const closePool = async () => {
+  await pool.end();
+};
+
+/* v8 ignore start */
+const cleanup = async () => {
+  await closePool();
+  process.exit(0);
+};
+
+process.on('SIGINT', cleanup);
+process.on('SIGTERM', cleanup);
+/* v8 ignore stop */

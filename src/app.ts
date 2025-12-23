@@ -83,8 +83,8 @@ curl "http://localhost:3000/api/v1/compare?surah=1&ayah=1"
           email: 'syafiq@example.com',
         },
         license: {
-          name: 'MIT',
-          url: 'https://opensource.org/licenses/MIT',
+          name: 'Unlicense',
+          url: 'https://unlicense.org',
         },
       },
       servers: [

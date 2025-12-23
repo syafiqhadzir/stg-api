@@ -25,6 +25,9 @@ WORKDIR /app
 # Copy production node_modules and built app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+# Copy static assets required for runtime (fonts and public/css)
+COPY fonts ./fonts
+COPY public ./public
 # Optionally copy csv if needed by the app at runtime, though ingestion is usually separate.
 # Retaining csv in the image just in case the app needs to reference them, 
 # but per architecture, data should be in DB. We will omit csv in runtime to be clean.
