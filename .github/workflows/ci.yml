@@ -45,10 +45,9 @@ jobs:
       run: npm run build
 
     - name: Initialize DB
-      # Install client to run sql script or use a separate step
-      run: |
-        sudo apt-get install -y postgresql-client
-        PGPASSWORD=postgres psql -h localhost -U postgres -d quran_db -f init.sql
+      run: npm run migrate up
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/quran_db
 
     - name: Run Tests
       run: npm test
